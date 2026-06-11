@@ -1,0 +1,7 @@
+.env
+database.db
+migrations
+alembic.ini
+.ruff_cache
+htmlcov
+.pytest_cache
