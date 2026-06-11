@@ -37,7 +37,7 @@ def session():
 
 
 @pytest.fixture
-def create_funcionario_teste(session):
+def funcionarios(session):
     funcionario = Funcionarios(
         nome="Mayckon Kennedy Santos Carvalho Duarte",
         email="mayckonkennedy877@gmail.com",
@@ -52,3 +52,25 @@ def create_funcionario_teste(session):
     session.add(funcionario)
     session.commit()
     session.refresh(funcionario)
+
+    return funcionario
+
+
+@pytest.fixture
+def outro_funcionario(session):
+    funcionario2 = Funcionarios(
+        nome="Maria Eduarda da Costa Silva",
+        email="ms.mariasilva@gmail.com",
+        cpf=converter_cpf("71568266111"),
+        data_nascimento=converter_data_br("16/01/2008"),
+        salario=Decimal("25650.9"),
+        telefone="(61) 98174 - 1089",
+        passagem=Decimal("420.10"),
+        alimentacao=Decimal("1580.10"),
+    )
+
+    session.add(funcionario2)
+    session.commit()
+    session.refresh(funcionario2)
+
+    return funcionario2

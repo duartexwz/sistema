@@ -17,6 +17,7 @@ class FuncionariosCreate(BaseModel):
 
 
 class FuncionariosResponse(BaseModel):
+    id: int
     nome: str
     email: str
     telefone: str
@@ -31,13 +32,13 @@ class FuncionariosDB(FuncionariosCreate):
     id: int
 
 
-class Menssage(BaseModel):
+class Message(BaseModel):
     message: str
 
 
 class FilterPage(BaseModel):
+    offset: int = 0
     limit: int = 10
-    offset: int = 20
 
 
 class FilterFuncionarios(BaseModel):
@@ -52,4 +53,15 @@ class FilterFuncionarios(BaseModel):
 
 
 class FuncionariosList(BaseModel):
-    funcionarios_list: list[FuncionariosResponse]
+    funcionarios: list[FuncionariosResponse]
+
+
+class FuncionariosUpdate(BaseModel):
+    nome: str | None = None
+    email: EmailStr | None = None
+    telefone: str | None = None
+    data_nascimento: DataBR | None = None
+    cpf: str | None = None
+    salario: Decimal | None = None
+    passagem: Decimal | None = None
+    alimentacao: Decimal | None = None
