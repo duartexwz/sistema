@@ -65,3 +65,12 @@ class FuncionariosUpdate(BaseModel):
     salario: Decimal | None = None
     passagem: Decimal | None = None
     alimentacao: Decimal | None = None
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: str | None = None

@@ -1,3 +1,4 @@
+from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, registry
 
 registro_tabela_ti = registry()
@@ -11,3 +12,4 @@ class UsuariosTi:
     usuario: Mapped[str] = mapped_column(unique=True)
     email_corp: Mapped[str] = mapped_column(unique=True)
     senha: Mapped[str] = mapped_column(nullable=False)
+    setor: Mapped[str] = mapped_column(String, nullable=True)

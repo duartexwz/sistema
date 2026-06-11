@@ -9,7 +9,7 @@ from sistema.app import app
 from sistema.database import get_session
 from sistema.funcionarios_models import Funcionarios, registro_tabela_funcionarios
 from sistema.funcoes_auxiliares import converter_cpf, converter_data_br
-from sistema.ti_models import registro_tabela_ti
+from sistema.ti_models import UsuariosTi, registro_tabela_ti
 
 
 @pytest.fixture
@@ -74,3 +74,15 @@ def outro_funcionario(session):
     session.refresh(funcionario2)
 
     return funcionario2
+
+@pytest.fixture
+def user_ti(session):
+    user = UsuariosTi(
+        usuario="Admin",
+        email_corp="admin@teste.com",
+        senha="admin.admin",
+        setor="Ti"
+    )
+    session.add(user)
+    session.commit()
+    session.refresh(user)

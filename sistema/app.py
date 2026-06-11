@@ -2,6 +2,7 @@ from http import HTTPStatus
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -9,9 +10,12 @@ from sistema.database import get_session
 from sistema.funcionarios_models import Funcionarios
 from sistema.funcionarios_schemas import FilterPage, FuncionariosCreate, FuncionariosList, FuncionariosResponse, FuncionariosUpdate, Message
 from sistema.funcoes_auxiliares import converter_cpf, converter_data_br
+from sistema.security import create_access_token, verify_password
+from sistema.ti_models import UsuariosTi
 
 app = FastAPI()
 
+Oauth2Form = Annotated[OAuth2PasswordRequestForm, Depends()]
 T_session = Annotated[Session, Depends(get_session)]
 
 
@@ -71,9 +75,9 @@ def atualizar_funcionario(
 
     if funcionario.nome:
         existe = session.scalar(select(Funcionarios).where(Funcionarios.nome == funcionario.nome, Funcionarios.id != funcionarios_id))
-
         if existe:
             raise HTTPException(status_code=HTTPStatus.CONFLICT, detail="Já existe um funcionário com esse nome.")
+
     if funcionario.email:
         existe = session.scalar(select(Funcionarios).where(Funcionarios.email == funcionario.email, Funcionarios.id != funcionarios_id))
         if existe:
@@ -107,3 +111,19 @@ def deletar_funcionario(
     session.commit()
 
     return {"message": "Funcionário deletado com sucesso!"}
+
+
+@app.post("/token")
+def login_for_acess_token(
+    session: T_session,
+    form_data: Oauth2Form,
+):
+    user = session.scalar(select(UsuariosTi).where(UsuariosTi.email_corp == form_data.username))
+
+    if not user:
+        raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Email ou senha incorretos.")
+    if not verify_password(form_data.password, user.senha):
+        raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Email ou senha incorretos.")
+
+    access_token = create_access_token(data={"sub": user.usuario})
+    return {"access_token": access_token, "token_type": "bearer"}

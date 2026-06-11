@@ -201,3 +201,13 @@ def test_deletar_funcionario_nao_encontrado(client, funcionarios):
 
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {"detail": "Funcionário não encontrado."}
+
+
+def test_get_token(client, funcionarios):
+    response = client.post("/token", data={"username": funcionarios.email})
+
+    token = response.json()
+
+    assert response.status_code == HTTPStatus.OK
+    assert "access_token" in token
+    assert "token_type" in token
