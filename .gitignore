@@ -5,3 +5,5 @@ alembic.ini
 .ruff_cache
 htmlcov
 .pytest_cache
+.env
+database.db
